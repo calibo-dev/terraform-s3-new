@@ -58,7 +58,8 @@ jobs:
           export TF_COMMAND="hashicorp/terraform:$TF_VERSION plan $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
           echo "*****TERRAFORM_PLAN_OUTPUT_START*****"
           echo -- "$TF_COMMAND"
-          echo "$ENVIRONMENT_VARIABLES" | sed 's/-e //g' > temp.env
+          echo "$ENVIRONMENT_VARIABLES" | tr ' ' '\n' | grep -v '^-e$' | grep -v '^$' > temp.env
+          cat temp.env
           docker run --user root --rm \
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
