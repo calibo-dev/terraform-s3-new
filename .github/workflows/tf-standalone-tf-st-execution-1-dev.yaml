@@ -55,7 +55,7 @@ jobs:
       - name: Terraform Plan
         if: env.ACTION == 'plan' || env.ACTION == 'apply' || env.ACTION == 'destroy'
         run: |
-          export TF_COMMAND="$ENVIRONMENT_VARIABLES hashicorp/terraform:$TF_VERSION plan $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
+          export TF_COMMAND="$ENVIRONMENT_VARIABLES ${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }}  hashicorp/terraform:$TF_VERSION plan $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
           echo "*****TERRAFORM_PLAN_OUTPUT_START*****"
           docker run --user root --rm \
             -v "$PWD"/"$TF_ROOT_DIR":/app \
@@ -64,7 +64,6 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
             -e AWS_DEFAULT_REGION=$AWS_REGION \
-            ${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} \
             "$TF_COMMAND"
           echo "*****TERRAFORM_PLAN_OUTPUT_END*****"
       - name: Terraform Apply
