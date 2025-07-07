@@ -61,7 +61,7 @@ jobs:
           docker run --user root --rm \
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
-            "$ENVIRONMENT_VARIABLES" \
+            "'$ENVIRONMENT_VARIABLES'" \
             -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }}  \
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
