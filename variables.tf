@@ -9,3 +9,7 @@ variable "test_1" {
 variable "test_2" {
   default = ""
 }
+
+variable "test_3" {
+  default = ""
+}
