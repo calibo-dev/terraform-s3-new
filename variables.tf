@@ -5,3 +5,7 @@ variable "s3_bucket_name" {
 variable "test_1" {
   default = ""
 }
+
+variable "test_2" {
+  default = ""
+}
