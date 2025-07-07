@@ -62,6 +62,7 @@ jobs:
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
             "$ENVIRONMENT_VARIABLES" \
+            -e TF_VAR_test_1=data-bricks-1 -e TF_WORKSPACE=tf-st-execution-1 \
             -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }}  \
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
