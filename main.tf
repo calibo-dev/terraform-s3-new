@@ -7,5 +7,6 @@ resource "aws_s3_bucket" "bucket" {
     Environment = "Dev"
     Test-1      = var.test_1
     Test-2      = var.test_2
+    Test-3      = var.test_3
   }
 }
