@@ -58,10 +58,11 @@ jobs:
           export TF_COMMAND="hashicorp/terraform:$TF_VERSION plan $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
           echo "*****TERRAFORM_PLAN_OUTPUT_START*****"
           echo -- "$TF_COMMAND"
+          echo "$ENVIRONMENT_VARIABLES" | sed 's/-e //g' > temp.env
           docker run --user root --rm \
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
-            "'$ENVIRONMENT_VARIABLES'" \
+            --env-file temp.env \
             -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }}  \
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
