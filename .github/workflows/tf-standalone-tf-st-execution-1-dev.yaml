@@ -65,7 +65,7 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
             -e AWS_DEFAULT_REGION=$AWS_REGION \
-            -e TF_VAR_test_1=from-commandline \
+            "$ENVIRONMENT_VARIABLES" \
             $TF_COMMAND
           echo "*****TERRAFORM_PLAN_OUTPUT_END*****"
       - name: Terraform Apply
