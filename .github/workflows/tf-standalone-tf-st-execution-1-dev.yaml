@@ -73,50 +73,45 @@ jobs:
       - name: Terraform Apply
         if: env.ACTION == 'apply'
         run: |
-          export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} hashicorp/terraform:$TF_VERSION apply $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -auto-approve"
-          echo "$ENVIRONMENT_VARIABLES" | tr ' ' '\n' | grep -v '^-e$' | grep -v '^$' > temp.env
+          export TF_COMMAND="$ENVIRONMENT_VARIABLES hashicorp/terraform:$TF_VERSION apply $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -auto-approve"
           echo "*****TERRAFORM_APPLY_OUTPUT_START*****"
           docker run --user root --rm\
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
-            --env-file temp.env \
             -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }} \
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
             -e AWS_DEFAULT_REGION=$AWS_REGION \
+            ${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} \
             $TF_COMMAND
           echo "*****TERRAFORM_APPLY_OUTPUT_END*****"
-      
       - name: Terraform Destroy
         if: env.ACTION == 'destroy'
         run: |
-          export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} hashicorp/terraform:$TF_VERSION apply -destroy $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -auto-approve"
-          echo "$ENVIRONMENT_VARIABLES" | tr ' ' '\n' | grep -v '^-e$' | grep -v '^$' > temp.env
+          export TF_COMMAND="$ENVIRONMENT_VARIABLES hashicorp/terraform:$TF_VERSION apply -destroy $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -auto-approve"
           echo "*****TERRAFORM_DESTROY_OUTPUT_START*****"
           docker run --user root --rm \
             -v "$PWD"/"$TF_ROOT_DIR":/app \
             -w /app \
-            --env-file temp.env \
-            -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }} \
-            -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
-            -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
-            -e AWS_DEFAULT_REGION=$AWS_REGION \ 
-            $TF_COMMAND
-          echo "*****TERRAFORM_DESTROY_OUTPUT_END*****"
-
-      - name: Terraform State
-        run: |
-          export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} -e TF_LOG=off hashicorp/terraform:$TF_VERSION state pull"
-          echo "$ENVIRONMENT_VARIABLES" | tr ' ' '\n' | grep -v '^-e$' | grep -v '^$' > temp.env
-          echo "*****TERRAFORM_GET_STATE_FILE_OUTPUT_START*****"
-          docker run --user root --rm \
-            -v "$PWD"/"$TF_ROOT_DIR":/app \
-            -w /app \
-            --env-file temp.env \
             -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }} \
             -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
             -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
             -e AWS_DEFAULT_REGION=$AWS_REGION \
+            ${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} \
+            $TF_COMMAND
+          echo "*****TERRAFORM_DESTROY_OUTPUT_END*****"
+      - name: Terraform State
+        run: |
+          export TF_COMMAND="$ENVIRONMENT_VARIABLES -e TF_LOG=off hashicorp/terraform:$TF_VERSION state pull"
+          echo "*****TERRAFORM_GET_STATE_FILE_OUTPUT_START*****"
+          docker run --user root --rm \
+            -v "$PWD"/"$TF_ROOT_DIR":/app \
+            -w /app \
+            -e AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_KEYS_SECRET_ID] }} \
+            -e AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_SECRET_ID] }} \
+            -e AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_SECRET_ID] }} \
+            -e AWS_DEFAULT_REGION=$AWS_REGION \
+            ${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} \
             $TF_COMMAND  > state.txt|| true
           cat state.txt
           echo "*****TERRAFORM_GET_STATE_FILE_OUTPUT_END*****"
