@@ -59,6 +59,7 @@ jobs:
             export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} hashicorp/terraform:$TF_VERSION plan -destroy $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
           else
             export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} hashicorp/terraform:$TF_VERSION plan $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
+          fi
           echo "$ENVIRONMENT_VARIABLES" | tr ' ' '\n' | grep -v '^-e$' | grep -v '^$' > temp.env
           echo "*****TERRAFORM_PLAN_OUTPUT_START*****"
           docker run --user root --rm \
