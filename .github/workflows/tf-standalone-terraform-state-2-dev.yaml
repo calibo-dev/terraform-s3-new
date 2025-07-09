@@ -55,7 +55,7 @@ jobs:
       - name: Terraform Plan
         if: env.ACTION == 'plan' || env.ACTION == 'apply' || env.ACTION == 'destroy'
         run: |
-          if [[ ${env.ACTION} == 'destroy' ]]
+          if [[ $ACTION == 'destroy' ]]
           then
             export TF_COMMAND="${{ secrets[env.SENSITIVE_ENV_VARIABLES_SECRET] }} hashicorp/terraform:$TF_VERSION plan -destroy $TF_VARIABLES ${{ secrets[env.SENSITIVE_TF_VARIABLES_SECRET] }} -no-color -out 'output'"
           else
