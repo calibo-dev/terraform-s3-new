@@ -16,10 +16,10 @@ variable "test_3" {
 }
 
 output "test_11" {
-   default = var.test_1
+   value = var.test_1
 }
 
 output "test_12" {
-   default = var.test_2
+   value = var.test_2
 }
 
