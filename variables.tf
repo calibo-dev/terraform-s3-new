@@ -17,6 +17,7 @@ variable "test_3" {
 
 output "test_11" {
    value = var.test_1
+   sensitive = true
 }
 
 output "test_12" {
